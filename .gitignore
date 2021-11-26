@@ -1,0 +1,14 @@
+node_modules
+esm
+cjs
+umd
+dist
+.idea
+coverage
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
