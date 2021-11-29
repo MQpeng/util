@@ -3,10 +3,11 @@ const gulpEsbuild = require('gulp-esbuild');
 const rename = require('gulp-rename');
 const streamToPromise = require('stream-to-promise');
 const clean = require('gulp-clean');
+const uglify = require('gulp-uglify');
 
 // 版本信息
 const pck = require('./package.json');
-const pckName = `${pck.name}.${pck.version}`;
+const pckName = `${pck.name}`;
 const Name = pck.name.replace(/^\S/, (s) => s.toUpperCase());
 const outDir = 'dist';
 
@@ -32,11 +33,16 @@ function build() {
               tsconfig: 'tsconfig.json',
               globalName: Name,
               format: format,
+              sourcemap: false,
+              minify: false,
+              minifySyntax: false,
+              treeShaking: true,
             }),
           )
+          // .pipe(uglify())
           .pipe(
             rename({
-              suffix: `.${format}`,
+              suffix: `.${format}.min`,
             }),
           )
           .pipe(dest(outDir)),
