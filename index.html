@@ -6,9 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
-  <body></body>
-  <script src="./dist/demo.iife.min.js"></script>
+  <body>
+    <input type="text" />
+    <input type="text" />
+    <input type="text" />
+    <input type="text" />
+  </body>
+  <script src="./dist/ks.iife.min.js"></script>
   <script>
-    const test = new Demo.Test();
+    const ins = document.querySelectorAll('input');
+    const ks = new Ks.default('keydown', { key: 'Tab', code: 'Tab' }, ins);
+    document.addEventListener('keydown', (e) => {
+      console.log('keydown', e);
+      if (e.key === 'Enter') {
+        ks.dispatch();
+      }
+    });
   </script>
 </html>

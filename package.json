@@ -1,12 +1,14 @@
 {
-  "name": "demo",
+  "name": "ks",
   "version": "1.0.0",
-  "description": "",
+  "description": "keyboard event simulation",
   "main": "src/index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "gulp",
+    "publish": ""
   },
-  "author": "",
+  "author": "poper",
   "license": "MIT",
   "devDependencies": {
     "gulp": "^4.0.2",
