@@ -1,38 +1,62 @@
-export type EventString =
-  | 'keydown'
-  | 'keyup'
-  | 'mouseup'
-  | 'mousemove'
-  | 'click'
-  | 'dblclick'
-  | 'mouseover'
-  | 'mouseout'
-  | 'mouseenter'
-  | 'mouseleave'
-  | 'contextmenu';
-
-export class Simulation {
-  fromEvent: EventString;
-  targetDom: any = document;
-  eventInit: KeyboardEventInit | MouseEventInit | undefined;
-  constructor(fromEvent: EventString, eventInit?: KeyboardEventInit | MouseEventInit, targetDom = document) {
-    this.fromEvent = fromEvent;
-    this.eventInit = eventInit;
-    this.targetDom = targetDom;
-  }
-
-  public dispatch() {
-    const keyEvent = this.of(this.fromEvent)
-      ? new KeyboardEvent(this.fromEvent, this.eventInit)
-      : new MouseEvent(this.fromEvent, this.eventInit);
-    if ((this.targetDom as any)?.length) {
-      this.targetDom.forEach((e: any) => e.dispatchEvent(keyEvent));
-    } else {
-      this.targetDom.dispatchEvent(keyEvent);
+export class KeyFocus {
+  elements: any[];
+  constructor(elements: any[]) {
+    if (!elements || !elements.length) {
+      throw new Error('Elements must be not null or undefined');
     }
+    this.elements = buildLink(elements);
   }
 
-  private of(fromEvent: EventString) {
-    return /^key/.test(fromEvent);
+  bindKey(cb?: (e?: KeyboardEvent) => void) {
+    this.elements.forEach((v, i, a) => {
+      v.value.addEventListener('keydown', (keyEvent: any) => {
+        if (cb) cb(keyEvent);
+        switch (keyEvent.key) {
+          case 'Enter':
+          case 'ArrowRight':
+            this.getFocus(v.next);
+            break;
+          case 'ArrowLeft':
+            this.getFocus(v.last);
+            break;
+          case 'ArrowDown':
+            this.getFocus(v.bottom);
+            break;
+          case 'ArrowUp':
+            this.getFocus(v.top);
+            break;
+        }
+      });
+    });
   }
+
+  private getFocus(next: any) {
+    if (!next) return;
+    if (next.focus) next.focus();
+    if (next.select) next.select();
+  }
+}
+
+export function buildLink(elements: any[]) {
+  const result: any[] = [];
+  let row = -1,
+    column = 0,
+    maxColumn = 0,
+    top: number = 0;
+  Array.from(elements).forEach((v, i, array) => {
+    if (Math.abs(top - v.offsetTop) > 5) {
+      row++;
+      maxColumn = Math.max(column, maxColumn);
+      column = 0;
+      top = v.offsetTop;
+    }
+    const topA = row - 1 < 0 ? null : result[column + maxColumn * (row - 1)];
+    if (topA) {
+      topA.bottom = v;
+    }
+    const current = { value: v, next: array[i + 1], last: array[i - 1], row, column, top: topA?.value };
+    result.push(current);
+    column++;
+  });
+  return result;
 }
