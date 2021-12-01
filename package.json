@@ -1,14 +1,22 @@
 {
-  "name": "key-focus-js",
-  "version": "1.0.2",
+  "name": "hotkey-focus",
+  "version": "1.0.0",
   "description": "keyboard event simulation",
-  "main": "src/index.ts",
-  "types": "./types/index.d.ts",
+  "main": "./lib/hotkey-focus.esm.js",
+  "module": "./lib/hotkey-focus.esm.js",
+  "es2015": "./lib/hotkey-focus.esm.js",
+  "esm5": "./lib/hotkey-focus.esm.js",
+  "files": [
+    "src",
+    "lib"
+  ],
+
+  "types": "./lib/hotkey-focus.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "gulp",
     "types": "tsc --emitDeclarationOnly --outDir lib",
-    "publish": "npm run build && npm publish"
+    "psh": "npm run build && npm run types && npm publish"
   },
   "author": "poper",
   "license": "MIT",
@@ -32,6 +40,7 @@
     "focus",
     "form-focus",
     "form-shortcut-focus",
+    "hotkeys-focus-js",
     "typescript"
   ],
   "bugs": {

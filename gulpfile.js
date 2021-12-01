@@ -6,9 +6,9 @@ const clean = require('gulp-clean');
 
 // 版本信息
 const pck = require('./package.json');
-const pckName = 'keyfocus' || `${pck.name}`;
+const pckName = 'hotkey-focus' || `${pck.name}`;
 const Name = pckName.replace(/^\S/, (s) => s.toUpperCase());
-const outDir = 'dist';
+const outDir = 'lib';
 
 // 清除文件
 function cleanFile(blob) {
@@ -19,25 +19,27 @@ function cleanFile(blob) {
 function build() {
   return Promise.all(
     ['iife', 'cjs', 'esm'].map((format) => {
+      const esConfig = {
+        outfile: `${pckName}.js`,
+        // outdir: outDir,
+        bundle: true,
+        loader: {
+          '.ts': 'ts',
+        },
+        tsconfig: 'tsconfig.json',
+        // globalName: 'KeyFocus',
+        format: format,
+        sourcemap: false,
+        minify: false,
+        minifySyntax: false,
+        treeShaking: true,
+      };
+      if (format == 'iife') {
+        esConfig.globalName = 'KeyFocus';
+      }
       return streamToPromise(
-        src(pck.main)
-          .pipe(
-            gulpEsbuild({
-              outfile: `${pckName}.js`,
-              // outdir: outDir,
-              bundle: true,
-              loader: {
-                '.ts': 'ts',
-              },
-              tsconfig: 'tsconfig.json',
-              globalName: Name,
-              format: format,
-              sourcemap: true,
-              minify: true,
-              minifySyntax: true,
-              treeShaking: true,
-            }),
-          )
+        src(['src/**/*.ts'])
+          .pipe(gulpEsbuild(esConfig))
           // .pipe(uglify())
           // .pipe(
           //   babel({
@@ -46,7 +48,7 @@ function build() {
           // )
           .pipe(
             rename({
-              suffix: `.${format}.min`,
+              suffix: `.${format}`,
             }),
           )
           .pipe(dest(outDir)),
@@ -55,4 +57,4 @@ function build() {
   );
 }
 
-exports.default = series(cleanFile('dist'), build);
+exports.default = series(cleanFile(outDir), build);

@@ -5,7 +5,7 @@
 ## get start
 
 ```shell
-npm install --save keyfocus
+npm install --save hotkey-focus
 ```
 
 ```javascript
