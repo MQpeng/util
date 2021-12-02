@@ -1,32 +1,49 @@
 export default class KeyFocus {
   elements: any[];
-  constructor(elements: any[]) {
+  useCapture: boolean;
+  constructor(elements: any[], useCapture: boolean = true) {
     if (!elements || !elements.length) {
       throw new Error('Elements must be not null or undefined');
     }
     this.elements = buildLink(elements);
+    this.useCapture = useCapture;
   }
 
-  bindKey(cb?: (e?: KeyboardEvent) => void) {
+  bindKey(beforeCb?: (e?: KeyboardEvent, ele?: any) => any, afterCb?: (e?: KeyboardEvent, ele?: any) => any) {
     this.elements.forEach((v, i, a) => {
-      v.value.addEventListener('keydown', (keyEvent: any) => {
-        if (cb) cb(keyEvent);
-        switch (keyEvent.key) {
-          case 'Enter':
-          case 'ArrowRight':
-            this.getFocus(v.next);
-            break;
-          case 'ArrowLeft':
-            this.getFocus(v.last);
-            break;
-          case 'ArrowDown':
-            this.getFocus(v.bottom);
-            break;
-          case 'ArrowUp':
-            this.getFocus(v.top);
-            break;
-        }
-      });
+      v.value.addEventListener(
+        'keydown',
+        (keyEvent: KeyboardEvent) => {
+          let key = '',
+            cbr: any;
+          if (beforeCb) {
+            cbr = beforeCb(keyEvent, v);
+            if (cbr === false) {
+              return;
+            }
+          }
+
+          switch (keyEvent.key) {
+            case 'Enter':
+            case 'ArrowRight':
+              key = 'next';
+              break;
+            case 'ArrowLeft':
+              key = 'last';
+              break;
+            case 'ArrowDown':
+              key = 'bottom';
+              break;
+            case 'ArrowUp':
+              key = 'top';
+              break;
+          }
+          this.getFocus(cbr || v[key]);
+
+          if (afterCb) afterCb(keyEvent, v);
+        },
+        true,
+      );
     });
   }
 
@@ -44,11 +61,12 @@ export function buildLink(elements: any[]) {
     maxColumn = 0,
     top: number = 0;
   Array.from(elements).forEach((v, i, array) => {
-    if (Math.abs(top - v.offsetTop) > 5) {
+    const vTop = getElementTop(v);
+    if (Math.abs(top - vTop) > 5) {
       row++;
       maxColumn = Math.max(column, maxColumn);
       column = 0;
-      top = v.offsetTop;
+      top = vTop;
     }
     const topA = row - 1 < 0 ? null : result[column + maxColumn * (row - 1)];
     if (topA) {
@@ -59,4 +77,24 @@ export function buildLink(elements: any[]) {
     column++;
   });
   return result;
+}
+
+export function getElementLeft(element) {
+  var actualLeft = element.offsetLeft;
+  var current = element.offsetParent;
+  while (current !== null) {
+    actualLeft += current.offsetLeft + current.clientLeft;
+    current = current.offsetParent;
+  }
+  return actualLeft;
+}
+
+export function getElementTop(element) {
+  var actualTop = element.offsetTop;
+  var current = element.offsetParent;
+  while (current !== null) {
+    actualTop += current.offsetTop + current.clientTop;
+    current = current.offsetParent;
+  }
+  return actualTop;
 }
