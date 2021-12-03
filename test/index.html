@@ -7,7 +7,7 @@
     <title>Document</title>
   </head>
   <body>
-    <h2 id="keydown"></h2>
+    <h2>KeyBoard Event Key: <span id="keydown"></span></h2>
     <div id="form">
       <input type="text" />
       <input type="text" />
@@ -26,14 +26,21 @@
       <input type="text" />
     </div>
   </body>
-  <script src="../dist/hotkey-focus.esm.js"></script>
+  <script src="../lib/hotkey-focus.iife.js"></script>
   <script>
     const keydown = document.getElementById('keydown');
     const ins = document.getElementById('form');
 
-    const ef = new Ef.EnterFocus(ins.children);
-    ef.bindKey((e) => {
-      keydown.innerText = e.key;
-    });
+    const ef = new KeyFocus.default(ins.children);
+    ef.bindKey(
+      (e) => {
+        keydown.innerText = e.key;
+      },
+      (event) => {
+        if ('Enter' === event.key || /^Arrow/.test(event.key)) {
+          event.stopPropagation();
+        }
+      },
+    );
   </script>
 </html>

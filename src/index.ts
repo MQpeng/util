@@ -1,50 +1,61 @@
 export default class KeyFocus {
-  elements: any[];
-  useCapture: boolean;
+  elements: any[] = [];
+  useCapture: boolean = true;
+  eventsHandler: any[] = [];
   constructor(elements: any[], useCapture: boolean = true) {
+    this.updateElements(elements);
+    this.useCapture = useCapture;
+  }
+
+  updateElements(elements: any[]) {
+    this.removeAllListener();
     if (!elements || !elements.length) {
       throw new Error('Elements must be not null or undefined');
     }
     this.elements = buildLink(elements);
-    this.useCapture = useCapture;
   }
 
-  bindKey(beforeCb?: (e?: KeyboardEvent, ele?: any) => any, afterCb?: (e?: KeyboardEvent, ele?: any) => any) {
+  bindKey(beforeCb?: (e: KeyboardEvent, ele: any) => any, afterCb?: (e: KeyboardEvent, ele: any) => any) {
     this.elements.forEach((v, i, a) => {
-      v.value.addEventListener(
-        'keydown',
-        (keyEvent: KeyboardEvent) => {
-          let key = '',
-            cbr: any;
-          if (beforeCb) {
-            cbr = beforeCb(keyEvent, v);
-            if (cbr === false) {
-              return;
-            }
+      const onHandler = (keyEvent: KeyboardEvent) => {
+        let key = '',
+          cbr: any;
+        if (beforeCb) {
+          cbr = beforeCb(keyEvent, v);
+          if (cbr === false) {
+            return;
           }
+        }
 
-          switch (keyEvent.key) {
-            case 'Enter':
-            case 'ArrowRight':
-              key = 'next';
-              break;
-            case 'ArrowLeft':
-              key = 'last';
-              break;
-            case 'ArrowDown':
-              key = 'bottom';
-              break;
-            case 'ArrowUp':
-              key = 'top';
-              break;
-          }
-          this.getFocus(cbr || v[key]);
+        switch (keyEvent.key) {
+          case 'Enter':
+          case 'ArrowRight':
+            key = 'next';
+            break;
+          case 'ArrowLeft':
+            key = 'last';
+            break;
+          case 'ArrowDown':
+            key = 'bottom';
+            break;
+          case 'ArrowUp':
+            key = 'top';
+            break;
+        }
+        this.getFocus(cbr || v[key]);
 
-          if (afterCb) afterCb(keyEvent, v);
-        },
-        true,
-      );
+        if (afterCb) afterCb(keyEvent, v);
+      };
+      this.eventsHandler.push({ element: v.value, onHandler });
+      v.value.addEventListener('keydown', onHandler, this.useCapture);
     });
+  }
+
+  public removeAllListener() {
+    this.eventsHandler.forEach(({ element, onHandler }) => {
+      element.removeEventListener('keydown', onHandler, this.useCapture);
+    });
+    this.eventsHandler.length = 0;
   }
 
   private getFocus(next: any) {

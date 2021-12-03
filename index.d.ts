@@ -1,8 +1,11 @@
 export default class KeyFocus {
     elements: any[];
     useCapture: boolean;
+    eventsHandler: any[];
     constructor(elements: any[], useCapture?: boolean);
-    bindKey(beforeCb?: (e?: KeyboardEvent, ele?: any) => any, afterCb?: (e?: KeyboardEvent, ele?: any) => any): void;
+    updateElements(elements: any[]): void;
+    bindKey(beforeCb?: (e: KeyboardEvent, ele: any) => any, afterCb?: (e: KeyboardEvent, ele: any) => any): void;
+    removeAllListener(): void;
     private getFocus;
 }
 export declare function buildLink(elements: any[]): any[];
