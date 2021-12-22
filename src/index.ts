@@ -2,6 +2,7 @@ export default class KeyFocus {
   elements: any[] = [];
   useCapture: boolean = true;
   eventsHandler: any[] = [];
+  keyEvent: 'keydown' | 'keyup' = 'keyup';
   constructor(elements: any[], useCapture: boolean = true) {
     this.updateElements(elements);
     this.useCapture = useCapture;
@@ -48,13 +49,13 @@ export default class KeyFocus {
         if (afterCb) afterCb(keyEvent, v);
       };
       this.eventsHandler.push({ element: v.value, onHandler });
-      v.value.addEventListener('keydown', onHandler, this.useCapture);
+      v.value.addEventListener(this.keyEvent, onHandler, this.useCapture);
     });
   }
 
   public removeAllListener() {
     this.eventsHandler.forEach(({ element, onHandler }) => {
-      element.removeEventListener('keydown', onHandler, this.useCapture);
+      element.removeEventListener(this.keyEvent, onHandler, this.useCapture);
     });
     this.eventsHandler.length = 0;
   }

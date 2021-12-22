@@ -2,6 +2,7 @@ export default class KeyFocus {
     elements: any[];
     useCapture: boolean;
     eventsHandler: any[];
+    keyEvent: 'keydown' | 'keyup';
     constructor(elements: any[], useCapture?: boolean);
     updateElements(elements: any[]): void;
     bindKey(beforeCb?: (e: KeyboardEvent, ele: any) => any, afterCb?: (e: KeyboardEvent, ele: any) => any): void;

@@ -2,7 +2,6 @@
 
 > Response direction key switch cursor
 
-
 > Bind listener of keyboard for changing focus in the form component
 
 ![DEMO](https://raw.githubusercontent.com/MQpeng/util/enter-focus/assets/zq3Ah56A3C.gif)
