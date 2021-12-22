@@ -12,6 +12,7 @@ export default class KeyFocus {
     if (!elements || !elements.length) {
       throw new Error('Elements must be not null or undefined');
     }
+    this.destroyLink();
     this.elements = buildLink(elements);
   }
 
@@ -62,6 +63,19 @@ export default class KeyFocus {
     if (!next) return;
     if (next.focus) next.focus();
     if (next.select) next.select();
+  }
+
+  public destroyLink() {
+    if (this.elements && this.elements.length) {
+      this.elements
+        .filter((vv) => vv)
+        .forEach((vv) => {
+          vv.next = null;
+          vv.last = null;
+          vv.top = null;
+          vv.bottom = null;
+        });
+    }
   }
 }
 

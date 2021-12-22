@@ -1,6 +1,6 @@
 {
   "name": "hotkey-focus",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "keyboard event simulation",
   "main": "./lib/hotkey-focus.esm.js",
   "module": "./lib/hotkey-focus.esm.js",

@@ -30,8 +30,8 @@ function build() {
         // globalName: 'KeyFocus',
         format: format,
         sourcemap: false,
-        minify: false,
-        minifySyntax: false,
+        minify: true,
+        minifySyntax: true,
         treeShaking: true,
       };
       if (format == 'iife') {

@@ -7,6 +7,7 @@ export default class KeyFocus {
     bindKey(beforeCb?: (e: KeyboardEvent, ele: any) => any, afterCb?: (e: KeyboardEvent, ele: any) => any): void;
     removeAllListener(): void;
     private getFocus;
+    destroyLink(): void;
 }
 export declare function buildLink(elements: any[]): any[];
 export declare function getElementLeft(element: any): any;
