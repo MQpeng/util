@@ -2,10 +2,11 @@ export default class KeyFocus {
   elements: any[] = [];
   useCapture: boolean = true;
   eventsHandler: any[] = [];
-  keyEvent: 'keydown' | 'keyup' = 'keyup';
-  constructor(elements: any[], useCapture: boolean = true) {
+  keyEvent: 'keydown' | 'keyup' = 'keydown';
+  constructor(elements: any[], useCapture: boolean = true, keyEvent: 'keydown' | 'keyup' = 'keydown') {
     this.updateElements(elements);
     this.useCapture = useCapture;
+    this.keyEvent = keyEvent;
   }
 
   updateElements(elements: any[]) {
